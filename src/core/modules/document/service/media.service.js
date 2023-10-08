@@ -1,7 +1,5 @@
+/* eslint-disable no-unused-vars */
 import { LoggerFactory } from 'packages/logger/factory/logger.factory';
-import { unlink } from 'fs';
-import { InternalServerException } from 'packages/httpException';
-import { cloudinaryUploader } from '../../../config/cloudinary.config';
 
 class Service {
     constructor() {
@@ -41,10 +39,8 @@ class Service {
     }
 
     async deleteOne(id) {
-        const response = await cloudinaryUploader.destroy(id);
         return {
             id,
-            ...response
         };
     }
 }
