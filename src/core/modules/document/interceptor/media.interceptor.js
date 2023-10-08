@@ -1,4 +1,4 @@
-import { ROOT_DIR } from 'core/env';
+import { ROOT_DIR } from 'core/common/constants/env.constant';
 import { BaseMulterInterceptor } from './multer.interceptor';
 import { MulterUploader } from '../multer.handler';
 

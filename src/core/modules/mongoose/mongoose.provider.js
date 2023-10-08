@@ -46,6 +46,7 @@ export class MongooseProvider {
             LoggerFactory.globalLogger.error(error.message);
             this.#count -= 1;
         }
+
         setTimeout(() => {
             if (!flag && this.#count) return this.connect();
         }, 3000);

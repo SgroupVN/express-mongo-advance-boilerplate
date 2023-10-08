@@ -1,4 +1,4 @@
-import { ROOT_DIR } from 'core/env';
+import { ROOT_DIR } from 'core/common/constants/env.constant';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';

@@ -110,7 +110,7 @@ export class AppBundle {
      */
     async run() {
         LoggerFactory.globalLogger.info('Building asynchronous config');
-        await queueRegister.publish();
+        // await queueRegister.publish();
         await DatabaseInstance.connect();
         await UserModel.createIndexes();
     }
