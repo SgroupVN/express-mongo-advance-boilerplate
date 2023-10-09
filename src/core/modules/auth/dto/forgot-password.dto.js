@@ -1,4 +1,4 @@
-import { ApiDocument } from 'core/config/swagger.config';
+import { ApiDocument } from 'core/system/config/swagger.config';
 import { ChangePasswordDto } from 'core/modules/user/dto/change-password.dto';
 import { SwaggerDocument } from 'packages/swagger';
 

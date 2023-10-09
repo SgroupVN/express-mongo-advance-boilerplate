@@ -1,30 +1,17 @@
-import { merge } from 'lodash';
 import moment from 'moment';
-
 import { DataPersistenceService } from 'packages/restBuilder/core/dataHandler';
 import { LoggerFactory } from 'packages/logger';
 import { QueryExtractor } from 'packages/restBuilder/modules/query';
-import {
-    DuplicateException, NotFoundException, InternalServerException,
-} from 'packages/httpException';
-import { FilterSign } from 'packages/restBuilder/enum';
-
-import { ChangePasswordTemplate, MailTemplateAdapter, MailConsumer } from 'core/modules/mail';
-import {
-    toPageData, toPageDataWith, Optional, mapByKey
-} from 'core/utils';
+import { DuplicateException, InternalServerException, NotFoundException } from 'packages/httpException';
+import { ChangePasswordTemplate, MailConsumer, MailTemplateAdapter } from 'core/modules/mail';
+import { Optional, toPageData } from 'core/utils';
 import { BcryptService } from 'core/modules/auth/service/bcrypt.service';
-import { MONGOOSE_ID_KEY } from 'core/common/constants';
 import { documentCleanerVisitor } from 'packages/restBuilder/core/dataHandler/document-cleaner.visitor';
 import { UserRepository } from './user.repository';
-import { GroupRepository } from '../group';
-import { TimetableRepository, TimetablePopulateKey } from '../timetable';
 import { UserQueryService } from './user-query.service';
-import { QueryField } from '../../common/query';
 import { CreateUserValidator } from './validator';
 import { MediaService } from '../document';
 import { mapToModelByUserCreationDto, mapToModelByUserUpdateDto } from './mapper/user.mapper';
-import { UpdateProfileValidator } from './validator/update-profile.validator';
 
 class UserServiceImpl extends DataPersistenceService {
     static RETRY_SEND_MAIL_TIMES = 3;
@@ -34,10 +21,7 @@ class UserServiceImpl extends DataPersistenceService {
         this.userQueryService = UserQueryService;
         this.mediaService = MediaService;
         this.bcryptService = BcryptService;
-        this.groupRepository = GroupRepository;
-        this.timetableRepository = TimetableRepository;
         this.createUserValidator = CreateUserValidator;
-        this.updateProfileValidator = UpdateProfileValidator;
         this.logger = LoggerFactory.create(UserServiceImpl.name);
         this.mailConsumer = MailConsumer;
     }
@@ -117,16 +101,6 @@ class UserServiceImpl extends DataPersistenceService {
         return { _id: createdUser._id };
     }
 
-    async findTimetables(userId, query) {
-        const [startDate, endDate] = this.extractDateRangeFromQuery(query);
-
-        const timetables = await this.getMergedTimetableBetweenGroupAndSelf(
-            startDate, endDate, userId
-        );
-
-        return toPageDataWith(timetables, timetables.length);
-    }
-
     async findOne(id) {
         const user = await this.repository.getDetailById(id);
         if (!user) {
@@ -146,8 +120,6 @@ class UserServiceImpl extends DataPersistenceService {
             .of(await this.repository.model.findById(id))
             .throwIfNotPresent(new NotFoundException('User not found'))
             .get();
-
-        await UpdateProfileValidator.validate(updateProfileDto);
 
         if (!updateProfileDto?.profile?.firstName) {
             updateProfileDto.profile.firstName = user.profile.firstName;
@@ -207,33 +179,6 @@ class UserServiceImpl extends DataPersistenceService {
             query.startDate ?? moment().subtract(DEFAULT_DATE_RANGE, 'days').toISOString(),
             query.endDate ?? moment().add(DEFAULT_DATE_RANGE, 'days').toISOString()
         ];
-    }
-
-    /**
-     *
-     * @param {string} startDate
-     * @param {string} endDate
-     * @param {string} userId
-     * @returns {Promise<[]>}
-     */
-    async getMergedTimetableBetweenGroupAndSelf(startDate, endDate, userId) {
-        let selfJoinedGroups = await this.groupRepository.getByMemberIds([userId]);
-
-        const selfJoinedGroupIds = mapByKey(selfJoinedGroups, MONGOOSE_ID_KEY);
-
-        // Release the object heap
-        selfJoinedGroups = null;
-
-        const [joinedGroupTimetables, selfTimetables] = await Promise.all([
-            this.timetableRepository.searchByDateRange(
-                startDate, endDate, new QueryField(TimetablePopulateKey.group, FilterSign.$in, selfJoinedGroupIds)
-            ),
-            this.timetableRepository.searchByDateRange(
-                startDate, endDate, new QueryField(TimetablePopulateKey.user, FilterSign.$eq, userId)
-            )
-        ]);
-
-        return merge(joinedGroupTimetables, selfTimetables);
     }
 
     notifyMailToUser(createdUser) {

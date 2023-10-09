@@ -1,5 +1,5 @@
 import { SwaggerDocument } from '../../../packages/swagger';
-import { ApiDocument } from '../../config/swagger.config';
+import { ApiDocument } from '../../system/config/swagger.config';
 
 ApiDocument.addModel('DeleteFileDto',
     {
