@@ -1,11 +1,16 @@
 import { BEARER_AUTH_CONFIG } from '../constants';
 
+function createResolver(handler) {
+    return () => new Promise(resolve => {
+        handler();
+        resolve();
+    });
+}
+
 export class SwaggerBuilder {
     instance = {};
 
-    static builder() {
-        return new SwaggerBuilder();
-    }
+    #resolvers = [];
 
     #toResponseSuccess = model => ({
         200: {
@@ -64,7 +69,9 @@ export class SwaggerBuilder {
     }
 
     addTag(name) {
-        if (!this.instance.tags.some(tag => tag === name)) this.instance.tags.push(name);
+        this.#resolvers.push(createResolver(() => {
+            if (!this.instance.tags.some(tag => tag === name)) this.instance.tags.push(name);
+        }));
     }
 
     /**
@@ -82,69 +89,83 @@ export class SwaggerBuilder {
     }} options
      */
     api(options) {
-        const {
-            route,
-            method,
-            tags,
-            description,
-            security,
-            model,
-            body,
-            params = [],
-            consumes = [],
-            errors = []
-        } = options;
-        const responses = {};
+        this.#resolvers.push(createResolver(() => {
+            const {
+                route,
+                method,
+                tags,
+                description,
+                security,
+                model,
+                body,
+                params = [],
+                consumes = [],
+                errors = []
+            } = options;
+            const responses = {};
 
-        if (!this.instance.paths[route]) {
-            this.instance.paths[route] = {};
-        }
+            if (!this.instance.paths[route]) {
+                this.instance.paths[route] = {};
+            }
 
-        this.instance.paths[route][method] = {
-            tags: tags.length ? tags : [tags],
-            description,
-            security: security ? [
-                {
-                    bearerAuth: [],
-                },
-            ] : [],
-            produces: [
-                'application/json',
-            ],
-            consumes,
-            parameters: params,
-            requestBody: body ? {
-                content: {
-                    'application/json': {
-                        schema: {
-                            $ref: `#/components/schemas/${body}`,
+            this.instance.paths[route][method] = {
+                tags: tags.length ? tags : [tags],
+                description,
+                security: security ? [
+                    {
+                        bearerAuth: [],
+                    },
+                ] : [],
+                produces: [
+                    'application/json',
+                ],
+                consumes,
+                parameters: params,
+                requestBody: body ? {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: `#/components/schemas/${body}`,
+                            },
                         },
                     },
+                    required: true,
+                } : {},
+                responses: {
+                    ...responses,
+                    ...this.#toResponseSuccess(model),
+                    ...this.#toErrors(errors)
                 },
-                required: true,
-            } : {},
-            responses: {
-                ...responses,
-                ...this.#toResponseSuccess(model),
-                ...this.#toErrors(errors)
-            },
-        };
+            };
+        }));
     }
 
     addModel(name, properties, isArray) {
         if (isArray) {
-            this.instance.components.schemas[name] = {
-                type: 'array',
-                items: {
+            this.#resolvers.push(
+                createResolver(() => {
+                    this.instance.components.schemas[name] = {
+                        type: 'array',
+                        items: {
+                            type: 'object',
+                            properties,
+                        }
+                    };
+                })
+            );
+        }
+
+        this.#resolvers.push(
+            createResolver(() => {
+                this.instance.components.schemas[name] = {
                     type: 'object',
                     properties,
-                }
-            };
-        } else {
-            this.instance.components.schemas[name] = {
-                type: 'object',
-                properties,
-            };
-        }
+                };
+            })
+        );
+    }
+
+    async resolve() {
+        await Promise.all(this.#resolvers.map(resolver => resolver()));
     }
 }
