@@ -1,4 +1,4 @@
-import { Role } from 'core/rules';
+import { Role } from 'core/constants/rules.constant';
 import { SpecificRoleGuard } from './specificRole.guard';
 import { UnionRoleGuard } from './unionRole.guard';
 

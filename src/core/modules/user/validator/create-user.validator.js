@@ -1,18 +1,14 @@
-import { UserStatus } from 'core/common/enum';
+import { USER_STATUS } from 'core/constants/enum';
 import { BadRequestException } from 'packages/httpException';
-import { UniversityValidator } from './university.validator';
 
 /**
  * @author dnphu
  */
 class CreateUserValidatorImpl {
-    groupRepository;
-
-    async validate(user, createUserDto) {
-        if (user?.status === UserStatus.SUSPEND) {
+    async validate(user) {
+        if (user?.status === USER_STATUS.SUSPEND) {
             throw new BadRequestException('This account is not available at the moment');
         }
-        await UniversityValidator.validate(createUserDto);
     }
 }
 

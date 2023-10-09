@@ -1,11 +1,11 @@
-import { UserStatus } from 'core/common/enum';
+import { USER_STATUS } from 'core/constants/enum';
 
 export function mapToModelByUserCreationDto(userCreationDto) {
     return {
         email: userCreationDto.email,
         password: userCreationDto.password,
         fingerprint: userCreationDto.fingerprint,
-        status: userCreationDto.status ?? UserStatus.PENDING,
+        status: userCreationDto.status ?? USER_STATUS.PENDING,
         specializedGroup: userCreationDto.specializedGroupId,
         profile: {
             firstName: userCreationDto.profile.firstName,

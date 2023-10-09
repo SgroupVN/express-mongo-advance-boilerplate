@@ -1,6 +1,6 @@
 import { extendBaseModel } from 'core/system/model';
 import { Schema, model } from 'mongoose';
-import { Role, UserStatus } from '../../../common/enum';
+import { ROLE, USER_STATUS } from '../../../constants/enum';
 import { saveFullNameHook } from './hooks';
 
 const schema = extendBaseModel({
@@ -19,13 +19,13 @@ const schema = extendBaseModel({
     fingerPrint: { type: String, trim: true, default: null },
     status: {
         type: String,
-        default: UserStatus.AVAILABLE,
-        enum: [UserStatus.AVAILABLE, UserStatus.PENDING, UserStatus.SUSPEND]
+        default: USER_STATUS.AVAILABLE,
+        enum: [USER_STATUS.AVAILABLE, USER_STATUS.PENDING, USER_STATUS.SUSPEND]
     },
     roles: {
         type: Array,
-        default: [Role.MEMBER],
-        schema: { type: String, enum: [Role.LEADER, Role.ADMIN, Role.MEMBER] }
+        default: [ROLE.MEMBER],
+        schema: { type: String, enum: [ROLE.LEADER, ROLE.ADMIN, ROLE.MEMBER] }
     },
     profile: {
         firstName: { type: String, trim: true, default: null },

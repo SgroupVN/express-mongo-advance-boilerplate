@@ -1,4 +1,4 @@
-import { uploadMediaSwagger } from 'core/common/swagger';
+import { uploadMediaSwagger } from 'core/system/swagger';
 import { deleteMediasInterceptor, MediaInterceptor } from 'core/modules/document/index';
 import { Module } from 'packages/handler';
 import { MediaController } from './media.controller';

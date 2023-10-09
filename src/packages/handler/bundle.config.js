@@ -6,8 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import { InvalidResolver, InvalidFilter } from 'packages/handler/system';
 import { ConfigService } from 'packages/config/config.service';
 import { LoggerFactory } from 'packages/logger/factory/logger.factory';
-import { UserModel } from 'core/modules/user/model/user.model';
-import { DatabaseInstance } from '../../core/system/config/database.config';
+import { InvalidUrlFilter } from './filter';
 
 /**
  * @typedef Filter
@@ -19,24 +18,24 @@ export class AppBundle {
 
     BASE_PATH_SWAGGER = '/docs';
 
-    static builder() {
-        LoggerFactory.globalLogger.info('App is starting bundling');
-        return new AppBundle();
-    }
+    #resolver;
 
     /**
      * @param {import("express-serve-static-core").Express} app
      */
-    applyAppContext(app) {
+    constructor(app) {
+        LoggerFactory.globalLogger.info('App is starting bundling');
+
         this.app = app;
-        return this;
+        this.init();
     }
 
     applyResolver(resolver) {
         if (!resolver['resolve']) {
             throw new InvalidResolver(resolver);
         }
-        this.app.use(this.BASE_PATH, resolver.resolve());
+
+        this.#resolver = resolver;
         return this;
     }
 
@@ -46,6 +45,7 @@ export class AppBundle {
      * @returns {AppBundle}
      */
     applyGlobalFilters(filters) {
+        filters.push(new InvalidUrlFilter());
         filters.forEach(filter => {
             if (filter['filter']) {
                 this.app.use(filter.filter);
@@ -109,8 +109,8 @@ export class AppBundle {
      */
     async run() {
         LoggerFactory.globalLogger.info('Building asynchronous config');
-        // await queueRegister.publish();
-        await DatabaseInstance.connect();
-        await UserModel.createIndexes();
+
+        const resolvedModules = await this.#resolver.resolve();
+        await this.app.use(this.BASE_PATH, resolvedModules);
     }
 }

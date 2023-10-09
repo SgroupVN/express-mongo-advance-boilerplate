@@ -43,6 +43,12 @@ export class Module {
 
     #router = express.Router();
 
+    /**
+     *
+     * @type {[(() => Promise<any>)]}
+     */
+    #asyncLoaders = [];
+
     static builder() {
         return new Module();
     }

@@ -87,7 +87,7 @@ class UserServiceImpl extends DataPersistenceService {
             .throwIfPresent(new DuplicateException('Email is being used'))
             .get();
 
-        await this.createUserValidator.validate(user, createUserDto);
+        await this.createUserValidator.validate(user);
 
         createUserDto.password = this.bcryptService.hash(createUserDto.password);
 

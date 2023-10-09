@@ -1,6 +1,6 @@
-import { BaseContainer } from 'packages/container/core/container';
+import { ClassScanner } from 'packages/container/core/container';
 import { MogpConfig } from 'packages/mogp/core/config';
 
-export class MigrationCollector extends BaseContainer {
+export class MigrationCollector extends ClassScanner {
     pattern = MogpConfig.getConfig().pathMigration;
 }

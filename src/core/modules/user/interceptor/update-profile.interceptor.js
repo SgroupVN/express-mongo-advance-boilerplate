@@ -1,12 +1,12 @@
 import { DefaultValidatorInterceptor } from 'core/system/interceptor';
 import { JoiUtils } from 'core/utils';
 import Joi from 'joi';
-import { SocialKind } from 'core/common/enum/social.enum';
-import { UserStatus } from 'core/common/enum';
+import { SOCIAL_TYPE } from 'core/constants/enum/social.enum';
+import { USER_STATUS } from 'core/constants/enum';
 
 export const updateProfileInterceptor = new DefaultValidatorInterceptor(
     Joi.object().keys({
-        status: Joi.string().valid(...Object.values(UserStatus)).optional(),
+        status: Joi.string().valid(...Object.values(USER_STATUS)).optional(),
         specializedGroupId: JoiUtils.objectId().optional(),
         profile: Joi.object({
             firstName: JoiUtils.optionalString().trim().min(0),
@@ -16,7 +16,7 @@ export const updateProfileInterceptor = new DefaultValidatorInterceptor(
             birthday: Joi.date().timestamp().optional(),
             phone: JoiUtils.phoneNumber().optional(),
             hometown: JoiUtils.optionalString().trim(),
-            facebook: JoiUtils.social(SocialKind.FACEBOOK).optional(),
+            facebook: JoiUtils.social(SOCIAL_TYPE.FACEBOOK).optional(),
         })
     })
 );
