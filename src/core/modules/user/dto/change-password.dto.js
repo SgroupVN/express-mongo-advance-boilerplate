@@ -1,4 +1,4 @@
-import { ApiDocument } from 'core/config/swagger.config';
+import { ApiDocument } from 'core/system/config/swagger.config';
 import { SwaggerDocument } from 'packages/swagger';
 
 ApiDocument.addModel('ChangePasswordDto',

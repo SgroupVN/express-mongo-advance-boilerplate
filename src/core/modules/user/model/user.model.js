@@ -1,4 +1,4 @@
-import { extendBaseModel } from 'core/infrastructure/model';
+import { extendBaseModel } from 'core/system/model';
 import { Schema, model } from 'mongoose';
 import { Role, UserStatus } from '../../../common/enum';
 import { saveFullNameHook } from './hooks';

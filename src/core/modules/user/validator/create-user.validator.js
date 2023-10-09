@@ -1,6 +1,5 @@
 import { UserStatus } from 'core/common/enum';
 import { BadRequestException } from 'packages/httpException';
-import { GroupValidatorFromUserDto } from './group.validator';
 import { UniversityValidator } from './university.validator';
 
 /**
@@ -14,7 +13,6 @@ class CreateUserValidatorImpl {
             throw new BadRequestException('This account is not available at the moment');
         }
         await UniversityValidator.validate(createUserDto);
-        await GroupValidatorFromUserDto.validate(createUserDto);
     }
 }
 

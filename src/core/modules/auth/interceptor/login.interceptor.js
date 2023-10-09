@@ -1,4 +1,4 @@
-import { DefaultValidatorInterceptor } from 'core/infrastructure/interceptor/default-validator.interceptor';
+import { DefaultValidatorInterceptor } from 'core/system/interceptor/default-validator.interceptor';
 import Joi from 'joi';
 import { JoiUtils } from '../../../utils';
 

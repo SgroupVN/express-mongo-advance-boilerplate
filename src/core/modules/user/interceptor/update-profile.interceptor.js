@@ -1,4 +1,4 @@
-import { DefaultValidatorInterceptor } from 'core/infrastructure/interceptor';
+import { DefaultValidatorInterceptor } from 'core/system/interceptor';
 import { JoiUtils } from 'core/utils';
 import Joi from 'joi';
 import { SocialKind } from 'core/common/enum/social.enum';
