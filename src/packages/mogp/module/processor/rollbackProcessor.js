@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import mongoose from 'mongoose';
-import { BaseContainer } from 'packages/container/core/container';
+import { ClassScanner } from 'packages/container/core/container';
 import { MogpConfig } from 'packages/mogp/core/config';
 import { MigrationModel } from 'packages/mogp/model/Migration';
 import { parallel } from 'packages/taskExecution';
@@ -12,7 +12,7 @@ import { BaseProcessor } from '../base/baseProcessor';
  */
 export class RollbackProcessor extends BaseProcessor {
     constructor() {
-        const container = new BaseContainer();
+        const container = new ClassScanner();
         container.pattern = MogpConfig.getConfig().pathRollback;
         super(container);
     }

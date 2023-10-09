@@ -1,6 +1,6 @@
 import '../../config/config-service.config';
 import { UserModel } from 'core/modules/user';
-import { Role } from 'core/rules';
+import { Role } from 'core/constants/rules.constant';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import faker from 'faker/locale/vi';
 import { BcryptService } from 'core/modules/auth/service';

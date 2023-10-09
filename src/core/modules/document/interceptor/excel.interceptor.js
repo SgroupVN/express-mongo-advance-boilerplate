@@ -1,4 +1,4 @@
-import { ROOT_DIR } from 'core/common/constants/env.constant';
+import { ROOT_DIR } from 'core/constants/env.constant';
 import { BaseMulterInterceptor } from './multer.interceptor';
 import { MulterUploader } from '../multer.handler';
 
@@ -8,7 +8,7 @@ export class ExcelInterceptor extends BaseMulterInterceptor {
             '.xlsx',
             'excel',
             fileQuantity,
-            `${ROOT_DIR}/core/uploads/excel`
+            `${ROOT_DIR}/core/system/uploads/excel`
         ));
     }
 }

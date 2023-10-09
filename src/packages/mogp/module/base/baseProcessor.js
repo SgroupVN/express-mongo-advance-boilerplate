@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import mongoose from 'mongoose';
 import { MogpConfig } from 'packages/mogp/core/config';
-import { BaseContainer } from 'packages/container/core/container';
+import { ClassScanner } from 'packages/container/core/container';
 import { parallel, serial } from 'packages/taskExecution';
 
 export class BaseProcessor {
@@ -12,10 +12,10 @@ export class BaseProcessor {
 
     /**
      *
-     * @param {BaseContainer} collector
+     * @param {ClassScanner} collector
      */
     constructor(collector) {
-        if (!(collector instanceof BaseContainer)) {
+        if (!(collector instanceof ClassScanner)) {
             throw new Error('collector is not instance of BaseContainer');
         }
         this.collector = collector;

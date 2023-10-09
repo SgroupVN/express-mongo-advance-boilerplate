@@ -1,4 +1,4 @@
-export const UserStatus = {
+export const USER_STATUS = {
     AVAILABLE: 'AVAILABLE',
     PENDING: 'PENDING',
     SUSPEND: 'SUSPEND',

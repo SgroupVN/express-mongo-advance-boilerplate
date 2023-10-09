@@ -1,4 +1,4 @@
-import { SocialKind } from 'core/common/enum/social.enum';
+import { SOCIAL_TYPE } from 'core/constants/enum/social.enum';
 import Joi from 'joi';
 
 const MONGOOSE_ID_OBJECT_FORMAT = /^[0-9a-fA-F]{24}$/;
@@ -43,11 +43,11 @@ export class JoiUtils {
     static social(kind) {
         let builder;
         switch (kind) {
-            case SocialKind.FACEBOOK:
+            case SOCIAL_TYPE.FACEBOOK:
                 builder = Joi.string().regex(FACEBOOK_PROFILE_URI_FORMAT);
                 break;
-            case SocialKind.GOOGLE:
-            case SocialKind.TWITTER:
+            case SOCIAL_TYPE.GOOGLE:
+            case SOCIAL_TYPE.TWITTER:
             default:
                 throw new Error('Unsupported kind of social to validate');
         }

@@ -4,6 +4,7 @@ import { AuthResolver } from './auth/auth.resolver';
 import { ApiDocument } from '../system/config/swagger.config';
 import { ExcelResolver } from './document/excel.resolver';
 import { MediaResolver } from './document/media.resolver';
+import { DatabaseProvider } from '../system/config/database.config';
 
 export const ModuleResolver = HandlerResolver
     .builder()
@@ -13,4 +14,5 @@ export const ModuleResolver = HandlerResolver
         AuthResolver,
         ExcelResolver,
         MediaResolver,
+        DatabaseProvider,
     ]);

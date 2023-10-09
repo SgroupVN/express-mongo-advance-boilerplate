@@ -4,7 +4,7 @@ import { getUserContext } from 'packages/authModel/module/user';
 import { RequestTransformer } from 'packages/restBuilder/core/requestTransformer';
 import { ValidHttpResponse } from 'packages/handler/response';
 import { MediaService } from 'core/modules/document';
-import { AVATAR_FOLDER_NAME } from 'core/common/constants/cloudinary.constant';
+import { AVATAR_FOLDER_NAME } from 'core/constants/cloudinary.constant';
 import UserOverviewSearch from './user-overview.query.json';
 
 class Controller {

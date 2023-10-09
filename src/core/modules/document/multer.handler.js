@@ -1,4 +1,4 @@
-import { ROOT_DIR } from 'core/common/constants/env.constant';
+import { ROOT_DIR } from 'core/constants/env.constant';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -30,7 +30,7 @@ export class MulterUploader {
         },
     }
 
-    constructor(extensions, keyName, fileQuantity = 1, destinationPath = `${ROOT_DIR}/core/uploads`) {
+    constructor(extensions, keyName, fileQuantity = 1, destinationPath = `${ROOT_DIR}/core/system/uploads`) {
         this.validateParams(extensions, destinationPath, keyName, fileQuantity);
 
         this.#allowedExtensions = extensions;

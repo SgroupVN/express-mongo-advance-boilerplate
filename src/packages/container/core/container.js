@@ -2,7 +2,7 @@
 /* eslint-disable global-require */
 import { glob } from 'glob';
 
-export class BaseContainer {
+export class ClassScanner {
     pattern;
 
     store = {};
