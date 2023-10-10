@@ -1,6 +1,6 @@
 import '../../config/config-service.config';
 import { Types } from 'mongoose';
-import { BcryptService } from 'core/modules/auth/service';
+import { BcryptService } from 'core/modules/auth/app/service';
 import { UserModel } from 'core/modules/user';
 import sgroupInitialUser from '../data/migration/initialUser.json';
 

@@ -1,2 +1,2 @@
 export * from './get-user-context';
-export * from './user-detail.model';
+export * from './user-detail';

@@ -1,6 +1,6 @@
 import { decode } from 'jsonwebtoken';
 import { UnAuthorizedException } from '../../../httpException';
-import { AUTH_CONTEXT } from '../../common/enum/auth-context';
+import { AUTH_CONTEXT } from '../../core/auth-context';
 
 export class JwtValidator {
     validate(token) {
