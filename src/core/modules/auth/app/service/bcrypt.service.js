@@ -1,12 +1,9 @@
 // @ts-check
-import { compareSync, hashSync, genSaltSync } from 'bcrypt';
+import { compare, hash, genSalt } from 'bcryptjs';
 import { LoggerFactory } from 'packages/logger/factory';
 import { ConfigService } from 'packages/config/config.service';
-import { UnAuthorizedException } from 'packages/httpException';
 
 class BcryptServiceImpl {
-    static DEFAULT_MSG_INCOMPATIBLE_PWD = 'Your current password is incorrect';
-
     saltRounds;
 
     constructor() {
@@ -19,21 +16,16 @@ class BcryptServiceImpl {
      * @param {string} hashed hashed string
      */
     compare(str, hashed) {
-        return compareSync(str, hashed);
+        return compare(str, hashed);
     }
 
     /**
      * @param {string} str to be hashed
      */
     hash(str) {
-        const salt = genSaltSync(this.saltRounds);
-        return hashSync(str, salt);
-    }
+        const salt = genSalt(this.saltRounds);
 
-    verifyComparison(str, hashed, msg = BcryptServiceImpl.DEFAULT_MSG_INCOMPATIBLE_PWD) {
-        if (!this.compare(str, hashed)) {
-            throw new UnAuthorizedException(msg);
-        }
+        return hash(str, salt);
     }
 }
 
