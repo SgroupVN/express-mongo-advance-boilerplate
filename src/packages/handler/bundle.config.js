@@ -7,9 +7,8 @@ import { InvalidResolver } from 'packages/handler/system';
 import { ConfigService } from 'packages/config/config.service';
 import { LoggerFactory } from 'packages/logger/factory/logger.factory';
 import { InvalidUrlFilter } from './filter';
-import { SecurityFilter } from '../authModel/core/security/SecurityFilter';
 import { HttpExceptionFilter } from '../httpException/HttpExceptionFilter';
-
+import { SecurityFilter } from '../authModel/core/security/security.filter';
 
 export class AppBundle {
     BASE_PATH = '/api';
