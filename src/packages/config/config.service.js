@@ -1,5 +1,5 @@
 import * as env from 'dotenv';
-import { NotFoundEnvKey } from './error/notfound-env-key';
+import { NotFoundEnvKey } from './notfound-env-key';
 
 export class ConfigService {
     static #instance;

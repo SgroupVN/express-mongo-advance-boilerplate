@@ -3,7 +3,7 @@ import { UserModel } from 'core/modules/user';
 import { Role } from 'core/constants/rules.constant';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import faker from 'faker/locale/vi';
-import { BcryptService } from 'core/modules/auth/service';
+import { BcryptService } from 'core/modules/auth/app/service';
 import { sample } from 'lodash';
 import { UniversityRepository } from 'core/modules/university/university.repository';
 

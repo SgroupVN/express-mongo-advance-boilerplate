@@ -1,4 +1,4 @@
-import { AUTH_CONTEXT } from '../../common/enum/auth-context';
+import { AUTH_CONTEXT } from '../../core/auth-context';
 import { JwtValidator } from './jwt.validator';
 import { UserDetail } from '../user';
 

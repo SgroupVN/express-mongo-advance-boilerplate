@@ -1,2 +1,2 @@
 export * from './config.service';
-export * from './error/notfound-env-key';
+export * from './notfound-env-key';
