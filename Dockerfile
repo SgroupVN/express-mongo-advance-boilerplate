@@ -1,17 +1,30 @@
-FROM node:12-alpine
+# Builder
+FROM node:16-alpine AS builder
 
-WORKDIR /usr/app
+WORKDIR /usr/backend
 
-COPY package*.json /usr/app/
+COPY ["package.json", "yarn.lock", "./"]
+COPY . .
 
-RUN npm install
+RUN yarn install --frozen-lockfile
+RUN yarn build
 
-COPY . /usr/app
+WORKDIR /usr/backend/prod
 
-RUN npm run build
+COPY ["package.json", "yarn.lock", "./"]
 
-RUN npm prune --production
+RUN yarn install --frozen-lockfile --production
+
+# Runner
+FROM node:16-alpine AS runner
+
+WORKDIR /usr/backend
+
+COPY .env ./.env
+COPY --from=builder /usr/backend/prod/node_modules  ./node_modules
+COPY --from=builder /usr/backend/dist ./dist
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["node", "dist/core/bin/www.js"]
+

@@ -38,7 +38,9 @@ class AuthServiceImpl {
             throw new UnprocessableEntityException(`User ${jwtPayload.email} is not available now. Please contact admin to reactive your account first`);
         }
 
-        this.bcryptService.verifyComparison(refreshPasswordDto.oldPassword, currentUser.password);
+        if (await this.bcryptService.compare(refreshPasswordDto.oldPassword, currentUser.password)) {
+            throw new UnAuthorizedException('Your current password is incorrect');
+        }
 
         const updateDoc = {
             password: this.bcryptService.hash(refreshPasswordDto.newPassword)

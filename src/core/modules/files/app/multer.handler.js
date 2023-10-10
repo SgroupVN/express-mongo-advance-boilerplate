@@ -47,11 +47,9 @@ export class MulterUploader {
             throw new Error('extensions must be an array and contain at least 1 element');
         }
 
-        fs.access(destinationPath, error => {
-            if (error) {
-                fs.mkdirSync(destinationPath);
-            }
-        });
+        if (!fs.existsSync(destinationPath)) {
+            fs.mkdirSync(destinationPath);
+        }
 
         if (!keyName) {
             throw new Error('keyName is required');
