@@ -1,12 +1,5 @@
 import { BEARER_AUTH_CONFIG } from '../constants';
 
-function createResolver(handler) {
-    return () => new Promise(resolve => {
-        handler();
-        resolve();
-    });
-}
-
 export class SwaggerBuilder {
     instance = {};
 
@@ -69,9 +62,9 @@ export class SwaggerBuilder {
     }
 
     addTag(name) {
-        this.#resolvers.push(createResolver(() => {
+        this.#resolvers.push(() => {
             if (!this.instance.tags.some(tag => tag === name)) this.instance.tags.push(name);
-        }));
+        });
     }
 
     /**
@@ -89,7 +82,7 @@ export class SwaggerBuilder {
     }} options
      */
     api(options) {
-        this.#resolvers.push(createResolver(() => {
+        this.#resolvers.push(() => {
             const {
                 route,
                 method,
@@ -137,13 +130,13 @@ export class SwaggerBuilder {
                     ...this.#toErrors(errors)
                 },
             };
-        }));
+        });
     }
 
     addModel(name, properties, isArray) {
         if (isArray) {
             this.#resolvers.push(
-                createResolver(() => {
+                () => {
                     this.instance.components.schemas[name] = {
                         type: 'array',
                         items: {
@@ -151,21 +144,21 @@ export class SwaggerBuilder {
                             properties,
                         }
                     };
-                })
+                }
             );
         }
 
         this.#resolvers.push(
-            createResolver(() => {
+            () => {
                 this.instance.components.schemas[name] = {
                     type: 'object',
                     properties,
                 };
-            })
+            }
         );
     }
 
-    async resolve() {
-        await Promise.all(this.#resolvers.map(resolver => resolver()));
+    resolve() {
+        this.#resolvers.map(resolver => resolver());
     }
 }

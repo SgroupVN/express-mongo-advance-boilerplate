@@ -1,7 +1,7 @@
 import { generateDocBasedOnSchema, ObjectId } from 'core/system/swagger';
 import { hasAdminRole } from 'core/modules/auth';
 import { MediaInterceptor } from 'core/modules/document';
-import { interceptIdObject } from 'core/modules/mongoose/objectId.interceptor';
+import { interceptIdObject } from 'core/system/database/interceptors/objectId.interceptor';
 import { changePasswordInterceptor, createUserInterceptor, updateProfileInterceptor } from 'core/modules/user';
 import { Module } from 'packages/handler/Module';
 import SearchUserSchema from './user-overview.query.json';

@@ -1,5 +1,5 @@
 import express from 'express';
-import {AsyncModuleLoader} from "./async-module-loader";
+import { ModuleLoader } from './module-loader';
 
 export class HandlerResolver {
     #globalRouter = express.Router();
@@ -33,16 +33,27 @@ export class HandlerResolver {
      *
      * @returns {import('express').Router}
      */
-    async resolve() {
-        await Promise.all(this.#modules.map(module => {
-            if (module instanceof AsyncModuleLoader) {
-                return module.buildAsyncLoaders();
+    resolve() {
+        this.#modules.map(module => {
+            if (module instanceof ModuleLoader) {
+                return module.buildLoaders();
             }
 
             module.build(this.#globalRouter);
             module.buildSwagger(this.#swagger);
             return module;
-        }));
+        });
+
         return this.#globalRouter;
+    }
+
+    async resolveAsync() {
+        await Promise.all(this.#modules.map(module => {
+            if (module instanceof ModuleLoader) {
+                return module.buildAsyncLoaders();
+            }
+
+            return module;
+        }));
     }
 }

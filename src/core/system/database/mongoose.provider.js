@@ -1,4 +1,5 @@
-import { LoggerFactory } from '../../../packages/logger/factory/logger.factory';
+import mongoose from 'mongoose';
+import { LoggerFactory } from 'src/packages/logger';
 
 export class MongooseProvider {
     #count = 3;
@@ -11,24 +12,19 @@ export class MongooseProvider {
     /**
      * @type {import('mongoose')}
      */
-    #mongooseInstance;
+    #mongooseInstance = mongoose
 
     static builder() {
         return new MongooseProvider();
     }
 
-    setConnectionString(url) {
+    constructor(url) {
         this.#connectionString = url;
-        return this;
-    }
-
-    setMongooseInstance(mongoose) {
-        this.#mongooseInstance = mongoose;
-        return this;
     }
 
     async connect() {
         let flag = false;
+
         try {
             await this.#mongooseInstance
                 .connect(
