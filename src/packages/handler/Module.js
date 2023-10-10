@@ -181,17 +181,18 @@ export class Module {
                 middlewares.push(Module.#producePreAuthorizeMiddleware);
             }
 
+            if (guards?.length > 0) {
+                guards.forEach(guard => {
+                    middlewares.push(Module.#produceGuard(guard));
+                });
+            }
+
             if (interceptors?.length > 0) {
                 interceptors.forEach(interceptor => {
                     middlewares.push(Module.#produceInterceptor(interceptor));
                 });
             }
 
-            if (guards?.length > 0) {
-                guards.forEach(guard => {
-                    middlewares.push(Module.#produceGuard(guard));
-                });
-            }
             if (!controller) {
                 throw new Error(`${this.#prefix.module} with ${method.toUpperCase()} ${this.#prefix.prefixPath}${route} can not mapping controller`);
             }
