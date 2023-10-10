@@ -3,16 +3,13 @@ import * as express from 'express';
 import methodOverride from 'method-override';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-import { InvalidFilter, InvalidResolver } from 'packages/handler/system';
+import { InvalidResolver } from 'packages/handler/system';
 import { ConfigService } from 'packages/config/config.service';
 import { LoggerFactory } from 'packages/logger/factory/logger.factory';
 import { InvalidUrlFilter } from './filter';
+import { SecurityFilter } from '../authModel/core/security/SecurityFilter';
 import { HttpExceptionFilter } from '../httpException/HttpExceptionFilter';
 
-/**
- * @typedef Filter
- * @property {(req, res, next) => {}} filter
- */
 
 export class AppBundle {
     BASE_PATH = '/api';
@@ -20,8 +17,6 @@ export class AppBundle {
     BASE_PATH_SWAGGER = '/docs';
 
     #resolver;
-
-    #filters = [];
 
     #swaggerInstance;
 
@@ -35,7 +30,7 @@ export class AppBundle {
         this.init();
     }
 
-    applyResolver(resolver) {
+    addModuleResolver(resolver) {
         if (!resolver['resolve']) {
             throw new InvalidResolver(resolver);
         }
@@ -44,24 +39,7 @@ export class AppBundle {
         return this;
     }
 
-    /**
-     *
-     * @param {[Filter]} filters
-     * @returns {AppBundle}
-     */
-    applyGlobalFilters(filters) {
-        filters.forEach(filter => {
-            if (filter['filter']) {
-                this.#filters.push(filter);
-            } else {
-                throw new InvalidFilter(filter);
-            }
-        });
-
-        return this;
-    }
-
-    applySwagger(swaggerBuilder) {
+    addSwagger(swaggerBuilder) {
         this.#swaggerInstance = swaggerBuilder.instance;
         return this;
     }
@@ -108,11 +86,7 @@ export class AppBundle {
     async run() {
         LoggerFactory.globalLogger.info('Building asynchronous config');
 
-        this.#filters.forEach(filter => {
-            if (filter['filter']) {
-                this.app.use(filter.filter);
-            }
-        });
+        this.app.use(new SecurityFilter().filter);
 
         const resolvedModules = this.#resolver.resolve();
 
