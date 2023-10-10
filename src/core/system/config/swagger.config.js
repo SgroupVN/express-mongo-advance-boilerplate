@@ -1,10 +1,10 @@
 import { ConfigService } from 'packages/config/config.service';
 import { SwaggerBuilder } from '../../../packages/swagger';
-import { AsyncModuleLoader } from '../../../packages/handler/async-module-loader';
+import { ModuleLoader } from '../../../packages/handler/module-loader';
 
 export const ApiDocument = new SwaggerBuilder();
 
-export const SwaggerProvider = AsyncModuleLoader.builder().registerAsyncLoaders([{
+export const SwaggerProvider = ModuleLoader.builder().registerLoaders([{
     loader: () => ApiDocument.addConfig({
         openapi: '3.0.1',
         info: {
@@ -39,12 +39,9 @@ export const SwaggerProvider = AsyncModuleLoader.builder().registerAsyncLoaders(
                     },
                 },
             },
-            {
-                url: 'https://app-dev.herokuapp.com/api',
-                description: 'DEV Env',
-            },
         ],
         basePath: '/api',
         auth: true,
-    }).resolve()
+    }).resolve(),
+    name: 'SwaggerProvider'
 }]);

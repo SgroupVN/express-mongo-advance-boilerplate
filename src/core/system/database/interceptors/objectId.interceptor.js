@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { responseJoiError, JoiUtils } from '../../utils';
+import { responseJoiError, JoiUtils } from '../../../utils';
 
 class IdObjectInterceptor {
     async intercept(req, res, next) {

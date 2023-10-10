@@ -3,7 +3,7 @@ import * as express from 'express';
 import methodOverride from 'method-override';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-import { InvalidResolver, InvalidFilter } from 'packages/handler/system';
+import { InvalidFilter, InvalidResolver } from 'packages/handler/system';
 import { ConfigService } from 'packages/config/config.service';
 import { LoggerFactory } from 'packages/logger/factory/logger.factory';
 import { InvalidUrlFilter } from './filter';
@@ -19,6 +19,10 @@ export class AppBundle {
     BASE_PATH_SWAGGER = '/docs';
 
     #resolver;
+
+    #filters = [];
+
+    #swaggerInstance;
 
     /**
      * @param {import("express-serve-static-core").Express} app
@@ -45,26 +49,19 @@ export class AppBundle {
      * @returns {AppBundle}
      */
     applyGlobalFilters(filters) {
-        filters.push(new InvalidUrlFilter());
         filters.forEach(filter => {
             if (filter['filter']) {
-                this.app.use(filter.filter);
+                this.#filters.push(filter);
             } else {
                 throw new InvalidFilter(filter);
             }
         });
+
         return this;
     }
 
     applySwagger(swaggerBuilder) {
-        // if (NODE_ENV !== 'production') {
-        this.app.use(
-            this.BASE_PATH_SWAGGER,
-            swaggerUi.serve,
-            swaggerUi.setup(swaggerBuilder.instance)
-        );
-        LoggerFactory.globalLogger.info('Building swagger');
-        // }
+        this.#swaggerInstance = swaggerBuilder.instance;
         return this;
     }
 
@@ -110,7 +107,25 @@ export class AppBundle {
     async run() {
         LoggerFactory.globalLogger.info('Building asynchronous config');
 
-        const resolvedModules = await this.#resolver.resolve();
-        await this.app.use(this.BASE_PATH, resolvedModules);
+        this.#filters.forEach(filter => {
+            if (filter['filter']) {
+                this.app.use(filter.filter);
+            }
+        });
+
+        const resolvedModules = this.#resolver.resolve();
+
+        this.app.use(this.BASE_PATH, resolvedModules);
+        this.app.use(
+            this.BASE_PATH_SWAGGER,
+            swaggerUi.serve,
+            swaggerUi.setup(this.#swaggerInstance)
+        );
+        LoggerFactory.globalLogger.info('Building swagger');
+        LoggerFactory.globalLogger.info(`Swagger hosted at ${this.BASE_PATH_SWAGGER}`);
+
+        this.app.use(new InvalidUrlFilter().filter);
+
+        await this.#resolver.resolveAsync();
     }
 }
