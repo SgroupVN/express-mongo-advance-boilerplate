@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserContext } from 'packages/authModel/module/user/UserContext';
+import { getUserContext } from 'packages/authModel/module/user/get-user-context';
 import { ForbiddenException } from 'packages/httpException/ForbiddenException';
 import { LoggerFactory } from 'packages/logger';
 import { ArgumentRequired } from './exceptions/ArgumentRequired';

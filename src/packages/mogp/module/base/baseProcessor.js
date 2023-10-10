@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import mongoose from 'mongoose';
 import { MogpConfig } from 'packages/mogp/core/config';
-import { ClassScanner } from 'packages/container/core/container';
+import { ClassScanner } from 'packages/scanner/core/container';
 import { parallel, serial } from 'packages/taskExecution';
 
 export class BaseProcessor {
