@@ -1,4 +1,4 @@
-import { ClassScanner } from 'packages/container/core/container';
+import { ClassScanner } from 'packages/scanner/core/container';
 import { MogpConfig } from 'packages/mogp/core/config';
 
 export class MigrationCollector extends ClassScanner {

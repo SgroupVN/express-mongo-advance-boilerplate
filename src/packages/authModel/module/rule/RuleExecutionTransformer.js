@@ -1,4 +1,4 @@
-import { RuleSplitCase } from 'packages/authModel/common/enum/ruleSplitCase';
+import { RULE_SPLITTER } from 'packages/authModel/common/enum/rule-splitter';
 import { InvalidRuleDefinition } from 'packages/authModel/exceptions/InvalidRuleDefinition';
 
 /* @notes
@@ -36,7 +36,7 @@ export class RuleExecutionTransformer {
             .split(RuleExecutionTransformer.PATTERN_SPLIT_RULE)
             .filter(val => val !== '');
         switch (ruleExecutionCollection.length) {
-            case RuleSplitCase.NO_PARAMS:
+            case RULE_SPLITTER.NO_PARAMS:
                 return RuleExecutionTransformer.toRuleExecution(ruleExecutionCollection[0]);
 
             /** @notes:
@@ -44,7 +44,7 @@ export class RuleExecutionTransformer {
             - localVariable=service.isAdmin() -> first argument will be used as storeKey
             - service.exec(param1,param2) -> first argument will be used as methodExecution
             */
-            case RuleSplitCase.STORE_OR_EXEC: {
+            case RULE_SPLITTER.STORE_OR_EXEC: {
                 return ruleExecutionCollection[0]
                     .includes(
                         RuleExecutionTransformer.PATTERN_SPLIT_SERVICE_AND_METHOD
@@ -59,7 +59,7 @@ export class RuleExecutionTransformer {
                         ruleExecutionCollection[0]
                     );
             }
-            case RuleSplitCase.STORE: {
+            case RULE_SPLITTER.STORE: {
                 const [storeKey, executionMethod, params] = ruleExecutionCollection;
                 return RuleExecutionTransformer.toRuleExecution(executionMethod, params, storeKey);
             }

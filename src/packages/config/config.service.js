@@ -12,7 +12,6 @@ export class ConfigService {
      * @param {{ pathLookup?: string; cache?: boolean; }} config
      */
     static config(config) {
-        console.log('Config', config)
         if (ConfigService.#instance) {
             throw new Error(
                 `Class ${ConfigService.name} has been configured before`,

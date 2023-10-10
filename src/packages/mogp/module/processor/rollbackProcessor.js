@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 import mongoose from 'mongoose';
-import { ClassScanner } from 'packages/container/core/container';
+import { ClassScanner } from 'packages/scanner/core/container';
 import { MogpConfig } from 'packages/mogp/core/config';
 import { MigrationModel } from 'packages/mogp/model/Migration';
 import { parallel } from 'packages/taskExecution';

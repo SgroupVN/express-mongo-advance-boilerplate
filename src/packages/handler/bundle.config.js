@@ -7,6 +7,7 @@ import { InvalidFilter, InvalidResolver } from 'packages/handler/system';
 import { ConfigService } from 'packages/config/config.service';
 import { LoggerFactory } from 'packages/logger/factory/logger.factory';
 import { InvalidUrlFilter } from './filter';
+import { HttpExceptionFilter } from '../httpException/HttpExceptionFilter';
 
 /**
  * @typedef Filter
@@ -125,6 +126,7 @@ export class AppBundle {
         LoggerFactory.globalLogger.info(`Swagger hosted at ${this.BASE_PATH_SWAGGER}`);
 
         this.app.use(new InvalidUrlFilter().filter);
+        this.app.use(new HttpExceptionFilter().filter);
 
         await this.#resolver.resolveAsync();
     }
